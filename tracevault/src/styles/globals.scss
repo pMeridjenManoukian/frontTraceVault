@@ -1,0 +1,102 @@
+
+
+.header-container{
+    justify-content: space-between;
+    flex-direction: row;
+    display: flex;
+}
+
+.home-container {
+    position: relative;
+    height: 100vh;
+    .launchapp {
+        position: absolute;
+        margin-bottom: 100px;
+        padding: 5px;
+    }
+}
+
+.choix-container {
+        position: relative;
+        text-align: center;
+        flex-direction: column;
+        justify-content: center;
+        display: flex;
+
+    .choix-produits {
+        font-weight: bold;
+        text-shadow: 1px 1px 1px;
+        background-color: azure;
+        .choix-titre{
+            padding: 30px;
+        }
+        &:hover {
+            color: #3f5d9b;
+            background-color: white;
+        }
+        .suiteHash {
+            z-index: 200;
+   
+            height: 400px;
+            top: 300px;
+            left: 200px;
+            padding: 30px;
+            background-color: lightgray;
+            flex-direction: column;
+            display: flex;
+            position: absolute;
+
+            .button {
+                border: 1px solid black;
+                padding: 5px;
+                &:hover { cursor: pointer; }
+                &.annulerHash{
+                    color:red;
+                }
+                &.validerHash {
+                    color: green;
+                }
+            }
+        }
+    }    
+   .choix-verifier {
+        width: 100%;
+        height: 48vh;
+    }
+    .choix-authentifier {
+        width: 100%;
+        height: 48vh;
+    }
+    
+}
+.nftcheck {
+
+    .button.vert{
+        background-color: green;
+    }
+    .button.rouge{
+        background-color: red;
+    }
+    .button {
+        padding: 5px;
+        border: 1px solid blue;
+    }
+    .card {
+        flex-direction: column;
+        justify-content: center;
+        display: flex;
+        padding: 3px;
+    }
+    .no-nft-card  {
+        border: 1px solid red;
+        .icon {
+            color: red;
+        }
+    }
+    .yes-nft-card  {
+        border: 1px solid green;
+        .icon {
+            color: green;
+        }
+    }
+}
