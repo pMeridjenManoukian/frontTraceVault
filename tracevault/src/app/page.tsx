@@ -1,21 +1,61 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import Content from '../components/content';
 import logo from '@/assets/tracevaultlogo.png';
 import Link from 'next/link';
+import { ArrowRight, Shield, FileCheck, Lock } from 'lucide-react';
 
 export default function Home() {
   return (
     <div className={`home-container ${styles.page}`}>
-     <Image 
-     src={logo}
-     width={1024}
-     height={1024}
-     alt="logo acceuil"
-     ></Image>
-    <Link className="launchapp" href="/choix">
-      <button>lancer application</button>
-    </Link>
+      <div className="home-content">
+        <div className="home-hero">
+          <div className="home-logo-wrapper">
+            <Image
+              src={logo}
+              width={300}
+              height={300}
+              alt="TraceVault Logo"
+              priority
+            />
+          </div>
+
+          <h1 className="home-title">TraceVault</h1>
+          <p className="home-subtitle">
+            Sécurisez vos documents avec la blockchain
+          </p>
+
+          <Link className="home-cta" href="/choix">
+            <span>Lancer l'application</span>
+            <ArrowRight size={20} />
+          </Link>
+        </div>
+
+        <div className="home-features">
+          <div className="feature-card">
+            <div className="feature-icon">
+              <Shield size={32} />
+            </div>
+            <h3>Sécurité blockchain</h3>
+            <p>Vos documents sont protégés par la technologie blockchain</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">
+              <FileCheck size={32} />
+            </div>
+            <h3>Vérification rapide</h3>
+            <p>Vérifiez l'authenticité en quelques secondes</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">
+              <Lock size={32} />
+            </div>
+            <h3>Immuable</h3>
+            <p>Les enregistrements ne peuvent pas être modifiés</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

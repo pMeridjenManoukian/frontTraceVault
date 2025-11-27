@@ -1,19 +1,17 @@
 "use client";
 
-import {useEffect, useState} from 'react'
+import { useState } from 'react'
 import styles from "../page.module.css";
-import { useRouter, useParams } from "next/navigation";
-import logo from '@/assets/tracevaultlogo.png';
-import Link from 'next/link';
-import {Download, ClipboardPlus} from 'lucide-react';
+import { useRouter } from "next/navigation";
+import { QrCode, Upload, CheckCircle, XCircle } from 'lucide-react';
 import Qrcode from '@/components/shared/qrcode';
 import Parcourir from '@/components/shared/parcourir';
 
-const verifier = () => {
+export default function Verifier() {
   const [compareOnlineReady, setcompareOnlineReady] = useState(false)
   const [hashRecorded, setHashRecorded] = useState("");
 
-    const router = useRouter();
+  const router = useRouter();
 
   const verifyQrCode = (code: string) => {
     if(code !== "" && code !== null && code !== undefined) {
@@ -32,25 +30,57 @@ const verifier = () => {
     console.log('on envoi :', hashRecorded)
     router.push(`/nftcheck?message=${hashRecorded}`);
   }
+
   return (
-    <div className={`choix-container ${styles.page}`}>
-            <div className="choix-verifier choix-produits">
-                <Parcourir recordHashQr={verifyQrCode}/>
+    <div className={`verifier-container ${styles.page}`}>
+      <div className="verifier-content">
+        <h1 className="verifier-title">Vérifier un document</h1>
+        <p className="verifier-subtitle">Choisissez une méthode de vérification</p>
+
+        <div className="verifier-methods">
+          <div className="verify-method-card">
+            <div className="method-header">
+              <Upload size={40} />
+              <h2>Uploader un fichier</h2>
             </div>
-            <div className="choix-authentifier choix-produits">
-                <div>
-                    <div className="choix-titre">SCANNER QR CODE</div>
-                    <ClipboardPlus size={200} />
-                    <Qrcode recordHashQr={verifyQrCode}/>
-                </div>
-                {compareOnlineReady ?
-                <div className="suiteHash">
-                  <h3>Voulez vous utiliser le hash{hashRecorded} et vérifier l'authenticité du docuement ? </h3>
-                  <div><div className="validerHash button" onClick={approuveHash}>OUI</div><div className="annulerHash button" onClick={cancelHash}>NON</div></div>
-                  </div> : ""}
+            <div className="method-body">
+              <Parcourir recordHashQr={verifyQrCode}/>
             </div>
-    </div>    
+          </div>
+
+          <div className="verify-method-card">
+            <div className="method-header">
+              <QrCode size={40} />
+              <h2>Scanner un QR Code</h2>
+            </div>
+            <div className="method-body">
+              <Qrcode recordHashQr={verifyQrCode}/>
+            </div>
+          </div>
+        </div>
+
+        {compareOnlineReady && (
+          <div className="hash-confirmation-modal">
+            <div className="modal-content">
+              <h3>Confirmation de vérification</h3>
+              <p className="hash-display">
+                Hash détecté: <code>{hashRecorded}</code>
+              </p>
+              <p>Voulez-vous vérifier l'authenticité de ce document ?</p>
+              <div className="modal-actions">
+                <button className="btn-confirm" onClick={approuveHash}>
+                  <CheckCircle size={20} />
+                  Vérifier
+                </button>
+                <button className="btn-cancel" onClick={cancelHash}>
+                  <XCircle size={20} />
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
-
-export default verifier
