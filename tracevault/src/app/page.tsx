@@ -11,6 +11,7 @@ export default function Home() {
      src={logo}
      width={1024}
      height={1024}
+     alt="logo acceuil"
      ></Image>
     <Link className="launchapp" href="/choix">
       <button>lancer application</button>

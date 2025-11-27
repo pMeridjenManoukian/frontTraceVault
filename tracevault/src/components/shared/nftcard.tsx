@@ -58,6 +58,7 @@ const documentnft = (
                     src={couilles}
                     width={1024}
                     height={1024}
+                    alt="photo objet"
                     ></Image>
             </div>
 )
