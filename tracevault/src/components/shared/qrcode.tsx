@@ -9,7 +9,10 @@ interface QrcodeProps {
 
 const Qrcode = ({ recordHashQr }: QrcodeProps) => {
   const [result, setResult] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [isScanning, setIsScanning] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const codeReaderRef = useRef<BrowserQRCodeReader | null>(null);
 
   useEffect(() => {
     if (result !== "") {
@@ -20,39 +23,44 @@ const Qrcode = ({ recordHashQr }: QrcodeProps) => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const codeReader = new BrowserQRCodeReader();
     let isMounted = true;
+    const codeReader = new BrowserQRCodeReader();
+    codeReaderRef.current = codeReader;
 
     const initScanner = async () => {
       try {
+        setIsScanning(true);
+        
+        // Liste des caméras disponibles
+        const videoInputDevices = await codeReader.listVideoInputDevices();
+        
+        if (videoInputDevices.length === 0) {
+          throw new Error("Aucune caméra détectée");
+        }
+
+        // Utilise la première caméra disponible
+        const selectedDeviceId = videoInputDevices[0].deviceId;
+
         if (videoRef.current) {
-          // Utilise decodeFromConstraints pour une meilleure gestion des erreurs
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'environment' } // Utilise la caméra arrière par défaut
-          });
-
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-
-          codeReader.decodeFromVideoDevice(
-            undefined,
-            videoRef.current!,
-            (result, error) => {
+          await codeReader.decodeFromVideoDevice(
+            selectedDeviceId, // ✅ ou null pour la caméra par défaut
+            videoRef.current,
+            (result, err) => {
               if (result && isMounted) {
                 setResult(result.getText());
+                setError('');
               }
-              if (error && isMounted) {
-                // Ignore les erreurs "NotFoundException" pour éviter les boucles
-                if (error.message !== 'No QR code found') {
-                  console.error("Erreur du scanner :", error);
-                }
+              if (err && isMounted && err.name !== 'NotFoundException') {
+                console.error("Erreur du scanner :", err);
               }
             }
           );
         }
-      } catch (error) {
-        console.error("Erreur d'initialisation du scanner :", error);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Erreur inconnue";
+        console.error("Erreur d'initialisation :", errorMessage);
+        setError(errorMessage);
+        setIsScanning(false);
       }
     };
 
@@ -60,27 +68,58 @@ const Qrcode = ({ recordHashQr }: QrcodeProps) => {
 
     return () => {
       isMounted = false;
-      if (videoRef.current && videoRef.current.srcObject) {
+      setIsScanning(false);
+      
+      if (codeReaderRef.current) {
+        codeReaderRef.current.reset();
+      }
+      
+      if (videoRef.current?.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
       }
-      codeReader.reset();
     };
   }, []);
 
   return (
-    <div>
+    <div style={{ textAlign: 'center' }}>
+      {error && (
+        <div style={{ color: 'red', marginBottom: '10px' }}>
+          ❌ {error}
+        </div>
+      )}
+      
+      {isScanning && !error && (
+        <div style={{ color: 'green', marginBottom: '10px' }}>
+          📷 Scanner actif...
+        </div>
+      )}
+
       <video
         ref={videoRef}
-        style={{ width: '100%', maxWidth: '500px' }}
+        style={{ 
+          width: '100%', 
+          maxWidth: '500px',
+          border: '2px solid #ccc',
+          borderRadius: '8px'
+        }}
         autoPlay
         playsInline
         muted
       />
+      
       {result && (
-        <div>
-          <p>Contenu du QR code :</p>
-          <code>{result}</code>
+        <div style={{ marginTop: '20px' }}>
+          <p style={{ fontWeight: 'bold' }}>✅ QR Code détecté :</p>
+          <code style={{ 
+            background: '#f4f4f4', 
+            padding: '10px', 
+            borderRadius: '4px',
+            display: 'block',
+            wordBreak: 'break-all'
+          }}>
+            {result}
+          </code>
         </div>
       )}
     </div>
