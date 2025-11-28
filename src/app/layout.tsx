@@ -36,19 +36,17 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-          <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-
       <body>
-        <Content>
-          {children}
-        </Content>
+          <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>
+              <RainbowKitProvider>
+                <Content>
+                  {children}
+                </Content>
+              </RainbowKitProvider>
+            </QueryClientProvider>
+        </WagmiProvider>
       </body>
-      </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-
     </html>
   );
 }
