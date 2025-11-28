@@ -17,7 +17,7 @@ const Footer = () => {
           <ul className="footer-links">
             <li><Link href="/choix">Application</Link></li>
             <li><Link href="/verifier">Vérifier</Link></li>
-            <li><Link href="/authentifier">Authentifier</Link></li>
+            <li><Link href="/authentifierchoix">Authentifier</Link></li>
           </ul>
         </div>
 

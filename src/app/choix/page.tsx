@@ -22,7 +22,7 @@ export default function Choix() {
             </div>
           </Link>
 
-          <Link href="/authentifier" className="choix-card choix-authentifier">
+          <Link href="/authentifierchoix" className="choix-card choix-authentifier">
             <div className="choix-card-icon">
               <ClipboardPlus size={80} />
             </div>

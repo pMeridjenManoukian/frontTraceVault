@@ -18,7 +18,10 @@
   --radius-md: 12px;
   --radius-lg: 16px;
 }
-
+body {
+  color: black;
+  background-color: white;
+}
 // Header styles
 .header-container {
   position: sticky;
@@ -746,5 +749,6 @@
     .icon {
       color: var(--success-color);
     }
+ 
   }
 }

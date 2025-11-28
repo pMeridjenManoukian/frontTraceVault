@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import '../styles/globals.scss';
 import Link from 'next/link';
 import { Menu, X, HelpCircle } from 'lucide-react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,6 +32,7 @@ const Header = () => {
           <HelpCircle size={20} />
           <span>Aide</span>
         </button>
+      <ConnectButton />
       </nav>
     </header>
   )
