@@ -12,7 +12,7 @@ const authentifier = () => {
 
   const choix1 = (
     <div className="choix-cards">
-          <Link href="/buildnft?choixnft=etiquette" className="choix-card choix-verifier">
+          <Link href="/buildLabel?choixnft=etiquette" className="choix-card choix-verifier">
             <div className="choix-card-icon">
               <SquareStar size={80} />
             </div>
@@ -42,7 +42,7 @@ const authentifier = () => {
 
   const choix2 = (
 <div className="choix-cards">
-          <Link href="/buildnft?choixnft=document" className="choix-card choix-verifier">
+          <Link href="/builDocument?choixnft=document" className="choix-card choix-verifier">
             <div className="choix-card-icon">
               <ClipboardPlus size={80} />
             </div>
@@ -55,7 +55,7 @@ const authentifier = () => {
             </div>
           </Link>
 
-          <Link href="/buildnft?choixnft=version" className="choix-card choix-authentifier">
+          <Link href="/buildVersion?choixnft=version" className="choix-card choix-authentifier">
             <div className="choix-card-icon">
               <FilePlusCorner size={80} />
             </div>
