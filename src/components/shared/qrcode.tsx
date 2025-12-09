@@ -82,42 +82,31 @@ const Qrcode = ({ recordHashQr }: QrcodeProps) => {
   }, []);
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div className="qr-scanner">
       {error && (
-        <div style={{ color: 'red', marginBottom: '10px' }}>
+        <div className="qr-scanner__status qr-scanner__status--error">
           ❌ {error}
         </div>
       )}
-      
+
       {isScanning && !error && (
-        <div style={{ color: 'green', marginBottom: '10px' }}>
+        <div className="qr-scanner__status qr-scanner__status--active">
           📷 Scanner actif...
         </div>
       )}
 
       <video
         ref={videoRef}
-        style={{ 
-          width: '100%', 
-          maxWidth: '500px',
-          border: '2px solid #ccc',
-          borderRadius: '8px'
-        }}
+        className="qr-scanner__video"
         autoPlay
         playsInline
         muted
       />
-      
+
       {result && (
-        <div style={{ marginTop: '20px' }}>
-          <p style={{ fontWeight: 'bold' }}>✅ QR Code détecté :</p>
-          <code style={{ 
-            background: '#f4f4f4', 
-            padding: '10px', 
-            borderRadius: '4px',
-            display: 'block',
-            wordBreak: 'break-all'
-          }}>
+        <div className="qr-scanner__result">
+          <p className="qr-scanner__result-label">✅ QR Code détecté :</p>
+          <code className="qr-scanner__result-code">
             {result}
           </code>
         </div>

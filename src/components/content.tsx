@@ -3,9 +3,9 @@ import Footer from './footer'
 
 const Content = ({children}: {children: React.ReactNode}) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div className="content-wrapper">
       <Header/>
-      <main style={{ flex: 1 }}>
+      <main>
         {children}
       </main>
       <Footer/>

@@ -3,19 +3,35 @@
 import { useState } from 'react'
 import styles from "../page.module.css";
 import { useRouter } from "next/navigation";
-import { QrCode, Upload, CheckCircle, XCircle } from 'lucide-react';
+import { QrCode, Upload, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { useReadContract } from 'wagmi';
+import { toast } from 'sonner';
 import Qrcode from '@/components/shared/qrcode';
 import Parcourir from '@/components/shared/parcourir';
+import { ADRESS_CONTRACT, CONTRACT_ABI } from '@/utils/constants';
+import { fetchNftMetadata, getImageFromMetadata } from '@/utils/ipfs';
 
 export default function Verifier() {
   const [compareOnlineReady, setcompareOnlineReady] = useState(false)
   const [hashRecorded, setHashRecorded] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
 
   const router = useRouter();
 
+  // 🔥 Lecture du smart contract avec wagmi
+  const { data: hashInfo, isLoading, isError, refetch } = useReadContract({
+    address: ADRESS_CONTRACT as `0x${string}`,
+    abi: CONTRACT_ABI,
+    functionName: 'getHashInfo',
+    args: [hashRecorded],
+    query: {
+      enabled: false, // On ne lance pas automatiquement, seulement au clic
+    }
+  });
+
   const verifyQrCode = (code: string) => {
     if(code !== "" && code !== null && code !== undefined) {
-      console.log("SALUT C COOL", code)
+      console.log("Hash détecté:", code)
       setcompareOnlineReady(true);
       setHashRecorded(code);
     } else { setcompareOnlineReady(false) }
@@ -26,9 +42,71 @@ export default function Verifier() {
     setHashRecorded("")
   }
 
-  const approuveHash = () => {
-    console.log('on envoi :', hashRecorded)
-    router.push(`/nftcheck?message=${hashRecorded}`);
+  const approuveHash = async () => {
+    console.log('🔍 Vérification du hash:', hashRecorded)
+    setIsVerifying(true);
+
+    try {
+      // 🚀 Appel au smart contract
+      const result = await refetch();
+
+      if (result.isError || !result.data) {
+        toast.error('❌ Hash non trouvé dans la blockchain');
+        setIsVerifying(false);
+        return;
+      }
+
+      const info = result.data as any;
+      console.log('📦 Données récupérées:', info);
+
+      // 🎯 Construire l'URL avec toutes les infos nécessaires
+      const isLabel = Number(info.typeCertif) === 0;
+
+      // 📸 Récupérer le JSON metadata depuis IPFS pour extraire le hash de l'image
+      let ipfsImageHash = '';
+      if (info.metadataURI && isLabel) {
+        const metadata = await fetchNftMetadata(info.metadataURI);
+        if (metadata) {
+          ipfsImageHash = getImageFromMetadata(metadata);
+          console.log('🖼️ Hash image extrait:', ipfsImageHash);
+        } else {
+          toast.error('⚠️ Impossible de charger l\'image du NFT');
+        }
+      }
+
+      const params = new URLSearchParams({
+        message: hashRecorded,
+        source: 'verification', // Pour différencier de la création
+        tokenId: info.tokenId.toString(),
+        typeCertif: info.typeCertif.toString(),
+        isLabel: isLabel.toString(),
+        proprietaire: info.proprietaire,
+        metadataURI: info.metadataURI,
+      });
+
+      // Ajouter les données spécifiques selon le type
+      if (isLabel) {
+        params.append('productName', info.nomProduit);
+        // Ajouter le hash IPFS de l'image (extrait du JSON metadata)
+        if (ipfsImageHash) {
+          params.append('photoUrl', ipfsImageHash);
+        }
+      } else {
+        params.append('versionActuelle', info.versionActuelle.toString());
+        params.append('totalVersions', info.totalVersions.toString());
+        params.append('estDerniereVersion', info.estDerniereVersion.toString());
+        params.append('hashDerniereVersion', info.hashDerniereVersion);
+        params.append('dateCreation', info.dateCreation);
+      }
+
+      toast.success('✅ Hash vérifié avec succès !');
+      router.push(`/nftcheck?${params.toString()}`);
+    } catch (error) {
+      console.error('Erreur lors de la vérification:', error);
+      toast.error('❌ Erreur lors de la vérification');
+    } finally {
+      setIsVerifying(false);
+    }
   }
 
   return (
@@ -68,11 +146,28 @@ export default function Verifier() {
               </p>
               <p>Voulez-vous vérifier l'authenticité de ce document ?</p>
               <div className="modal-actions">
-                <button className="btn-confirm" onClick={approuveHash}>
-                  <CheckCircle size={20} />
-                  Vérifier
+                <button
+                  className="btn-confirm"
+                  onClick={approuveHash}
+                  disabled={isVerifying}
+                >
+                  {isVerifying ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin" />
+                      Vérification...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle size={20} />
+                      Vérifier
+                    </>
+                  )}
                 </button>
-                <button className="btn-cancel" onClick={cancelHash}>
+                <button
+                  className="btn-cancel"
+                  onClick={cancelHash}
+                  disabled={isVerifying}
+                >
                   <XCircle size={20} />
                   Annuler
                 </button>

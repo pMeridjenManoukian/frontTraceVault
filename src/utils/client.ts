@@ -1,0 +1,13 @@
+import { createPublicClient, http } from "viem";
+import { hardhat } from "viem/chains";
+
+export const publicLient = createPublicClient({
+        chain: hardhat,
+        transport: http(process.env.NEXT_PUBLIC_HARDHAT_RPC_URL || "http://127.0.0.1:8545")
+})
+
+export const pinataInfo = {
+    API_KEY_PINATA : "989d8d89c1ec3ce8d1ec",
+    JWT : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI3OWY0NzhiNC01MjhiLTRjMjEtODRjMy0yYmZiOGI3NTEzNGEiLCJlbWFpbCI6InAubWVyaWRqZW4xOTg5QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI5ODlkOGQ4OWMxZWMzY2U4ZDFlYyIsInNjb3BlZEtleVNlY3JldCI6IjBmOWY3OWY0ZTYxY2M5YzZjN2NjMGVjZjY0ZTAyNGVhMjI3ZTY2YWE0MTdlM2Y2ZDYzY2VjNjAzNTE1Yjk2M2IiLCJleHAiOjE3OTY3NTM4MTB9.rOV1ThG1qve5gx9pyiHNLuv6lcbQUoR_Gmr1saRz95g"
+
+}

@@ -1,51 +1,32 @@
 'use client';
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
 import Content from "../components/content"
 import '@rainbow-me/rainbowkit/styles.css';
-import {
-  getDefaultConfig,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit';
-import { WagmiProvider } from 'wagmi';
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-} from 'wagmi/chains';
-import {
-  QueryClientProvider,
-  QueryClient,
-} from "@tanstack/react-query";
+import { Toaster } from 'sonner';
+import dynamic from 'next/dynamic';
+
+// Charger le Providers uniquement côté client pour éviter les erreurs SSR
+const Providers = dynamic(
+  () => import('./providers').then((mod) => mod.Providers),
+  { ssr: false }
+);
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const queryClient = new QueryClient();
-  const config = getDefaultConfig({
-  appName: 'My RainbowKit App',
-  projectId: 'YOUR_PROJECT_ID',
-  chains: [mainnet, polygon, optimism, arbitrum, base],
-  ssr: true, // If your dApp uses server side rendering (SSR)
-});
 
   return (
     <html lang="en">
       <body>
-          <WagmiProvider config={config}>
-            <QueryClientProvider client={queryClient}>
-              <RainbowKitProvider>
-                <Content>
-                  {children}
-                </Content>
-              </RainbowKitProvider>
-            </QueryClientProvider>
-        </WagmiProvider>
+        <Providers>
+          <Toaster position="top-right" richColors />
+          <Content>
+            {children}
+          </Content>
+        </Providers>
       </body>
     </html>
   );
