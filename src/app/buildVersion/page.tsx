@@ -132,6 +132,21 @@ const BuildVersion = () => {
   // État pour activer la récupération des infos uniquement après succès
   const [shouldFetchInfo, setShouldFetchInfo] = useState(false);
 
+  // Type pour HashInfo basé sur le smart contract
+  type HashInfo = {
+    existe: boolean;
+    typeCertif: number;
+    tokenId: bigint;
+    versionActuelle: bigint;
+    totalVersions: bigint;
+    estDerniereVersion: boolean;
+    hashDerniereVersion: string;
+    dateCreation: string;
+    nomProduit: string;
+    proprietaire: string;
+    metadataURI: string;
+  };
+
   // Appel pour récupérer les infos du hash après succès
   const { data: hashInfo } = useReadContract({
     address: ADRESS_CONTRACT as `0x${string}`,
@@ -141,7 +156,7 @@ const BuildVersion = () => {
     query: {
       enabled: shouldFetchInfo && !!newHash && isSuccess
     }
-  });
+  }) as { data: HashInfo | undefined };
 
   // Gestion du succès/échec de la transaction blockchain
   useEffect(() => {
@@ -174,11 +189,11 @@ const BuildVersion = () => {
           message: newHash,
           source: 'creation',
           typeCertif: '1', // CLASSEUR
-          versionActuelle: hashInfo.versionActuelle?.toString() || '1',
-          totalVersions: hashInfo.totalVersions?.toString() || '1',
+          versionActuelle: hashInfo?.versionActuelle?.toString() || '1',
+          totalVersions: hashInfo?.totalVersions?.toString() || '1',
           estDerniereVersion: 'true'
         });
-        console.log('📤 Redirection vers nftcheck avec version:', hashInfo.versionActuelle, '/', hashInfo.totalVersions);
+        console.log('📤 Redirection vers nftcheck avec version:', hashInfo?.versionActuelle, '/', hashInfo?.totalVersions);
         router.push(`/nftcheck?${params.toString()}`);
       }, 1000);
     }
