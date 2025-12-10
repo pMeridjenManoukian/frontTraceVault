@@ -1,19 +1,28 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from "../page.module.css";
-import { useRouter } from "next/navigation";  
-import { QrCode, Upload, CheckCircle, XCircle } from 'lucide-react';
+import { useRouter } from "next/navigation";
+import { QrCode, Upload, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import Qrcode from '@/components/shared/qrcode';
 import Parcourir from '@/components/shared/parcourir';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { parseEther } from 'viem';
+import { ADRESS_CONTRACT, CONTRACT_ABI } from '@/utils/constants';
+import { toast } from 'sonner';
 
-const buildDocument = () => {
-  
+const BuildDocument = () => {
+
     const [compareOnlineReady, setcompareOnlineReady] = useState(false)
     const [hashRecorded, setHashRecorded] = useState("");
-  
+    const [documentFile, setDocumentFile] = useState<File | null>(null);
+    const [isCreatingNFT, setIsCreatingNFT] = useState(false);
+
+    const { data: hash, writeContract, isPending } = useWriteContract();
+    const { isLoading: isConfirming, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
+
     const router = useRouter();
-  
+
     const verifyQrCode = (code: string) => {
       if(code !== "" && code !== null && code !== undefined) {
         console.log("SALUT C COOL", code)
@@ -21,15 +30,95 @@ const buildDocument = () => {
         setHashRecorded(code);
       } else { setcompareOnlineReady(false) }
     }
+
+    // Fonction pour recevoir le fichier depuis Parcourir
+    const handleFileFromParcourir = (file: File) => {
+      setDocumentFile(file);
+      toast.success('Fichier sélectionné', {
+        description: `${file.name} prêt à être enregistré`
+      });
+    };
+
     const cancelHash = () => {
     setcompareOnlineReady(false);
-    setHashRecorded("")
+    setHashRecorded("");
+    setDocumentFile(null);
   }
 
-  const approuveHash = () => {
-    console.log('on envoi :', hashRecorded)
-    router.push(`/nftcheck?message=${hashRecorded}`);
-  }
+  // Fonction pour créer le NFT Document (Classeur)
+  const creerDocumentNft = async () => {
+    if (!documentFile) {
+      toast.error('Fichier manquant', {
+        description: 'Veuillez sélectionner un document'
+      });
+      return;
+    }
+
+    setIsCreatingNFT(true);
+    console.log('passe1')
+    try {
+      // Création directe sur la blockchain (pas d'upload IPFS pour les documents)
+      toast.info('Transaction blockchain', {
+        description: 'Envoi de la transaction au smart contract...'
+      });
+
+      // Pour les documents, on ne stocke pas sur IPFS, donc on passe une valeur placeholder
+      const placeholderIpfs = "QmNoPinata"; // Placeholder pour indiquer que le fichier n'est pas sur IPFS
+
+      console.log('📝 Paramètres de la transaction:');
+      console.log('  - Hash:', hashRecorded);
+      console.log('  - IPFS (placeholder):', placeholderIpfs);
+      console.log('  - Address:', ADRESS_CONTRACT);
+
+      writeContract({
+        address: ADRESS_CONTRACT as `0x${string}`,
+        abi: CONTRACT_ABI,
+        functionName: 'mintNouveauClasseur',
+        args: [hashRecorded, placeholderIpfs],
+        value: parseEther('0.0002')
+      });
+
+      console.log('✅ writeContract appelé');
+
+    } catch (error) {
+      console.error('Erreur:', error);
+      toast.error('Échec de la création', {
+        description: error instanceof Error ? error.message : 'Une erreur est survenue'
+      });
+      setIsCreatingNFT(false);
+    }
+  };
+
+  // Gestion du succès/échec de la transaction blockchain
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('🎉 NFT Document créé avec succès!');
+
+      toast.success('NFT Document créé avec succès !', {
+        description: 'Redirection vers la page de vérification...'
+      });
+
+      setTimeout(() => {
+        const params = new URLSearchParams({
+          message: hashRecorded,
+          source: 'creation',
+          typeCertif: '1', // CLASSEUR
+          versionActuelle: '1',
+          totalVersions: '1',
+          estDerniereVersion: 'true'
+        });
+        console.log('📤 Redirection vers nftcheck');
+        router.push(`/nftcheck?${params.toString()}`);
+      }, 2000);
+    }
+
+    if (isError) {
+      toast.error('Transaction échouée', {
+        description: 'La transaction blockchain a échoué'
+      });
+      setIsCreatingNFT(false);
+    }
+  }, [isSuccess, isError, hashRecorded, router]);
 
   return (
     <div className={`verifier-container ${styles.page}`}>
@@ -44,17 +133,7 @@ const buildDocument = () => {
               <h2>Uploader un fichier</h2>
             </div>
             <div className="method-body">
-              <Parcourir recordHashQr={verifyQrCode}/>
-            </div>
-          </div>
-
-          <div className="verify-method-card">
-            <div className="method-header">
-              <QrCode size={40} />
-              <h2>Scanner un QR Code</h2>
-            </div>
-            <div className="method-body">
-              <Qrcode recordHashQr={verifyQrCode}/>
+              <Parcourir recordHashQr={verifyQrCode} setFileFromParcourir={handleFileFromParcourir}/>
             </div>
           </div>
         </div>
@@ -66,13 +145,28 @@ const buildDocument = () => {
               <p className="hash-display">
                 Hash détecté: <code>{hashRecorded}</code>
               </p>
-              <p>Voulez-vous vérifier l'authenticité de ce document ?</p>
+              <p>Voulez-vous créer un NFT Document pour ce fichier ?</p>
+              <div className="infos-complementaires-label">
+                <p>Fichier du document</p>
+                {documentFile ? (
+                  <div>
+                    <p><strong>Fichier sélectionné :</strong> {documentFile.name}</p>
+                    <p className="file-status file-status--ready">✓ Prêt à être uploadé</p>
+                  </div>
+                ) : (
+                  <p className="file-status file-status--missing">Aucun fichier sélectionné</p>
+                )}
+              </div>
               <div className="modal-actions">
-                <button className="btn-confirm" onClick={approuveHash}>
-                  <CheckCircle size={20} />
-                  Vérifier
+                <button
+                  className="btn-confirm"
+                  onClick={creerDocumentNft}
+                  disabled={!documentFile || isCreatingNFT}
+                >
+                  {isCreatingNFT ? <Loader2 size={20} className="spinner" /> : <CheckCircle size={20} />}
+                  {isCreatingNFT ? 'Création en cours...' : 'Créer un NFT Document'}
                 </button>
-                <button className="btn-cancel" onClick={cancelHash}>
+                <button className="btn-cancel" onClick={cancelHash} disabled={isCreatingNFT}>
                   <XCircle size={20} />
                   Annuler
                 </button>
@@ -85,4 +179,4 @@ const buildDocument = () => {
   )
 }
 
-export default buildDocument
+export default BuildDocument

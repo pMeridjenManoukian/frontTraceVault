@@ -40,8 +40,8 @@ const Parcourir = ({ recordHashQr, label = false, setFileFromParcourir }: Qrcode
         console.log('CA PASSE')
         recordHashQr(hashHex);
 
-        // Si label est true, envoyer le fichier au parent
-        if (label && setFileFromParcourir) {
+        // Envoyer le fichier au parent si la fonction est définie
+        if (setFileFromParcourir) {
           setFileFromParcourir(file);
         }
       };

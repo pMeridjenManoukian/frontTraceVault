@@ -12,7 +12,7 @@ import { ADRESS_CONTRACT, CONTRACT_ABI } from '@/utils/constants';
 import { pinataInfo } from '@/utils/client';
 import { toast } from 'sonner';
 
-const buildLabel = () => {
+const BuildLabel = () => {
 
     const [compareOnlineReady, setcompareOnlineReady] = useState(false);
     const [hashRecorded, setHashRecorded] = useState("");
@@ -244,4 +244,4 @@ const buildLabel = () => {
   )
 }
 
-export default buildLabel
+export default BuildLabel
