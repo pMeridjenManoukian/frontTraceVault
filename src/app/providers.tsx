@@ -8,10 +8,10 @@ import {
 import { WagmiProvider } from 'wagmi';
 import {
   mainnet,
+  sepolia,
   polygon,
   optimism,
   arbitrum,
-  arbitrumSepolia,
   base,
   hardhat,
   localhost
@@ -24,7 +24,7 @@ import {
 const config = getDefaultConfig({
   appName: 'TraceVault',
   projectId: 'YOUR_PROJECT_ID',
-  chains: [arbitrumSepolia, localhost, hardhat, mainnet, polygon, optimism, arbitrum, base],
+  chains: [sepolia, localhost, hardhat, mainnet, polygon, optimism, arbitrum, base],
   ssr: false, // Désactiver SSR pour éviter les erreurs localStorage
 });
 
