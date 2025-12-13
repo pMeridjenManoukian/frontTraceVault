@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from "../page.module.css";
 import { useRouter } from "next/navigation";
 import { QrCode, Upload, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import Qrcode from '@/components/shared/qrcode';
-import Parcourir from '@/components/shared/parcourir';
+import Parcourir, { ParcourirRef } from '@/components/shared/parcourir';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseEther } from 'viem';
 import { ADRESS_CONTRACT, CONTRACT_ABI } from '@/utils/constants';
@@ -20,6 +20,7 @@ const BuildLabel = () => {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [isCreatingNFT, setIsCreatingNFT] = useState(false);
     const [imageIpfsHash, setImageIpfsHash] = useState<string>("");
+    const parcourirRef = useRef<ParcourirRef>(null);
 
     const { data: hash, writeContract, isPending } = useWriteContract();
     const { isLoading: isConfirming, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
@@ -183,8 +184,12 @@ const BuildLabel = () => {
               <Upload size={40} />
               <h2>Uploader la photo de l'objet</h2>
             </div>
-            <div className="method-body">
-              <Parcourir recordHashQr={verifyQrCode} label={true} setFileFromParcourir={handleFileFromParcourir}/>
+            <div
+              className="method-body clickable"
+              onClick={() => parcourirRef.current?.triggerFileInput()}
+              style={{ cursor: 'pointer' }}
+            >
+              <Parcourir ref={parcourirRef} recordHashQr={verifyQrCode} label={true} setFileFromParcourir={handleFileFromParcourir}/>
             </div>
           </div>
         </div>

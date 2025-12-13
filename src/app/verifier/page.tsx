@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import styles from "../page.module.css";
 import { useRouter } from "next/navigation";
 import { QrCode, Upload, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 import { toast } from 'sonner';
 import Qrcode from '@/components/shared/qrcode';
-import Parcourir from '@/components/shared/parcourir';
+import Parcourir, { ParcourirRef } from '@/components/shared/parcourir';
 import { ADRESS_CONTRACT, CONTRACT_ABI } from '@/utils/constants';
 import { fetchNftMetadata, getImageFromMetadata } from '@/utils/ipfs';
 
@@ -15,6 +15,7 @@ export default function Verifier() {
   const [compareOnlineReady, setcompareOnlineReady] = useState(false)
   const [hashRecorded, setHashRecorded] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+  const parcourirRef = useRef<ParcourirRef>(null);
 
   const router = useRouter();
 
@@ -116,8 +117,12 @@ export default function Verifier() {
               <Upload size={40} />
               <h2>Uploader un fichier</h2>
             </div>
-            <div className="method-body">
-              <Parcourir recordHashQr={verifyQrCode}/>
+            <div
+              className="method-body clickable"
+              onClick={() => parcourirRef.current?.triggerFileInput()}
+              style={{ cursor: 'pointer' }}
+            >
+              <Parcourir ref={parcourirRef} recordHashQr={verifyQrCode}/>
             </div>
           </div>
 

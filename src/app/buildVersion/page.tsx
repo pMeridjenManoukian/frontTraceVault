@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from "../page.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Upload, CheckCircle, XCircle, Loader2, QrCode } from 'lucide-react';
-import Parcourir from '@/components/shared/parcourir';
+import Parcourir, { ParcourirRef } from '@/components/shared/parcourir';
 import Qrcode from '@/components/shared/qrcode';
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
 import { parseEther } from 'viem';
@@ -20,6 +20,8 @@ const BuildVersion = () => {
     const [isCreatingVersion, setIsCreatingVersion] = useState(false);
     const [step, setStep] = useState<'old' | 'new'>('old');
     const [compareOnlineReady, setCompareOnlineReady] = useState(false);
+    const oldParcourirRef = useRef<ParcourirRef>(null);
+    const newParcourirRef = useRef<ParcourirRef>(null);
 
     const { data: hash, writeContract, isPending } = useWriteContract();
     const { isLoading: isConfirming, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
@@ -197,8 +199,13 @@ const BuildVersion = () => {
               <h2>1. Uploader la version actuelle</h2>
               {oldDocumentFile && <span className="step-completed">✓</span>}
             </div>
-            <div className="method-body">
+            <div
+              className="method-body clickable"
+              onClick={() => oldParcourirRef.current?.triggerFileInput()}
+              style={{ cursor: 'pointer' }}
+            >
               <Parcourir
+                ref={oldParcourirRef}
                 recordHashQr={handleOldFileHash}
                 setFileFromParcourir={handleOldFileFromParcourir}
               />
@@ -224,8 +231,13 @@ const BuildVersion = () => {
                 <h2>2. Nouvelle version</h2>
                 {newDocumentFile && <span className="step-completed">✓</span>}
               </div>
-              <div className="method-body">
+              <div
+                className="method-body clickable"
+                onClick={() => newParcourirRef.current?.triggerFileInput()}
+                style={{ cursor: 'pointer' }}
+              >
                 <Parcourir
+                  ref={newParcourirRef}
                   recordHashQr={handleNewFileHash}
                   setFileFromParcourir={handleNewFileFromParcourir}
                 />

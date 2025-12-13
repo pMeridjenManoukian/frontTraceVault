@@ -1,6 +1,6 @@
 import React from 'react'
 import {BadgeCheck} from 'lucide-react';
-import {useState} from 'react'
+import {useState, useRef, useImperativeHandle, forwardRef} from 'react'
 
 interface QrcodeProps {
   recordHashQr: (data: string) => void;
@@ -8,10 +8,21 @@ interface QrcodeProps {
   setFileFromParcourir?: (file: File) => void;
 }
 
-const Parcourir = ({ recordHashQr, label = false, setFileFromParcourir }: QrcodeProps) => {
+export interface ParcourirRef {
+  triggerFileInput: () => void;
+}
+
+const Parcourir = forwardRef<ParcourirRef, QrcodeProps>(({ recordHashQr, label = false, setFileFromParcourir }, ref) => {
 
     const [fileHash, setFileHash] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => ({
+      triggerFileInput: () => {
+        fileInputRef.current?.click();
+      }
+    }));
 
          const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -49,7 +60,12 @@ const Parcourir = ({ recordHashQr, label = false, setFileFromParcourir }: Qrcode
                     <div className="choix-titre">DEFINIR UN FICHIER A VERIFIER</div>
                     <BadgeCheck size={200} />
                     <div>
-                      <input type="file" onChange={handleFileChange} accept={label ? ".jpg,.jpeg,.png" : undefined} />
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        onChange={handleFileChange}
+                        accept={label ? ".jpg,.jpeg,.png" : undefined}
+                      />
                       {errorMessage && (
                         <div className="error-message">
                           {errorMessage}
@@ -64,6 +80,8 @@ const Parcourir = ({ recordHashQr, label = false, setFileFromParcourir }: Qrcode
                     </div>
                 </div>
   )
-}
+});
+
+Parcourir.displayName = 'Parcourir';
 
 export default Parcourir
