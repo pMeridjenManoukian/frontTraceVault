@@ -207,7 +207,7 @@ const BuildVersion = () => {
 
         <div className="verifier-methods">
           {/* Étape 1 : Version actuelle */}
-          <div className="verify-method-card">
+          <div className={`verify-method-card ${step === 'new' ? 'dimmed' : ''}`}>
             <div className="method-header">
               <Upload size={40} />
               <h2>1. Uploader la version actuelle</h2>
@@ -221,7 +221,7 @@ const BuildVersion = () => {
             </div>
           </div>
 
-          <div className="verify-method-card">
+          <div className={`verify-method-card ${step === 'new' ? 'dimmed' : ''}`}>
             <div className="method-header">
               <QrCode size={40} />
               <h2>1. Scanner le QR code de la version actuelle</h2>
