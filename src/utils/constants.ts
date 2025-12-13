@@ -6,38 +6,106 @@ export const CONTRACT_ABI = [
       "type": "constructor"
     },
     {
-      "inputs": [],
-      "name": "ApprovalCallerNotOwnerNorApproved",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721IncorrectOwner",
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "ApprovalQueryForNonexistentToken",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ERC721InsufficientApproval",
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "BalanceQueryForZeroAddress",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "approver",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidApprover",
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "MintERC2309QuantityExceedsLimit",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidOperator",
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "MintToZeroAddress",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidOwner",
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "MintZeroQuantity",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidReceiver",
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "NotCompatibleWithSpotMints",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidSender",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ERC721NonexistentToken",
       "type": "error"
     },
     {
@@ -60,61 +128,6 @@ export const CONTRACT_ABI = [
         }
       ],
       "name": "OwnableUnauthorizedAccount",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OwnerQueryForNonexistentToken",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OwnershipNotInitializedForExtraData",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "SequentialMintExceedsLimit",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "SequentialUpToTooSmall",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "SpotMintTokenIdTooSmall",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "TokenAlreadyExists",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "TransferCallerNotOwnerNorApproved",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "TransferFromIncorrectOwner",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "TransferToNonERC721ReceiverImplementer",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "TransferToZeroAddress",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "URIQueryForNonexistentToken",
       "type": "error"
     },
     {
@@ -234,37 +247,6 @@ export const CONTRACT_ABI = [
       "inputs": [
         {
           "indexed": true,
-          "internalType": "uint256",
-          "name": "fromTokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "toTokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        }
-      ],
-      "name": "ConsecutiveTransfer",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
           "internalType": "address",
           "name": "owner",
           "type": "address"
@@ -375,7 +357,7 @@ export const CONTRACT_ABI = [
       ],
       "name": "approve",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -774,7 +756,7 @@ export const CONTRACT_ABI = [
       ],
       "name": "safeTransferFrom",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -796,13 +778,13 @@ export const CONTRACT_ABI = [
         },
         {
           "internalType": "bytes",
-          "name": "_data",
+          "name": "data",
           "type": "bytes"
         }
       ],
       "name": "safeTransferFrom",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1007,19 +989,6 @@ export const CONTRACT_ABI = [
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "totalSupply",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "result",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",
@@ -1039,7 +1008,7 @@ export const CONTRACT_ABI = [
       ],
       "name": "transferFrom",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
