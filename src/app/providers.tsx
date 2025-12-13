@@ -11,9 +11,10 @@ import {
   polygon,
   optimism,
   arbitrum,
+  arbitrumSepolia,
   base,
   hardhat,
-  localhost,
+  localhost
 } from 'wagmi/chains';
 import {
   QueryClientProvider,
@@ -23,7 +24,7 @@ import {
 const config = getDefaultConfig({
   appName: 'TraceVault',
   projectId: 'YOUR_PROJECT_ID',
-  chains: [localhost, hardhat, mainnet, polygon, optimism, arbitrum, base],
+  chains: [arbitrumSepolia, localhost, hardhat, mainnet, polygon, optimism, arbitrum, base],
   ssr: false, // Désactiver SSR pour éviter les erreurs localStorage
 });
 

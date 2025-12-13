@@ -1,7 +1,14 @@
 import { createPublicClient, http } from "viem";
-import { hardhat } from "viem/chains";
+import { hardhat, arbitrumSepolia } from "viem/chains";
 
+// Client pour Arbitrum Sepolia (production/testnet)
 export const publicLient = createPublicClient({
+        chain: arbitrumSepolia,
+        transport: http(process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL || "https://sepolia-rollup.arbitrum.io/rpc")
+})
+
+// Client pour Hardhat local (développement)
+export const localClient = createPublicClient({
         chain: hardhat,
         transport: http(process.env.NEXT_PUBLIC_HARDHAT_RPC_URL || "http://127.0.0.1:8545")
 })
