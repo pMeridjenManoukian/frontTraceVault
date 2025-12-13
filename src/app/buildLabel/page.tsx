@@ -28,7 +28,6 @@ const BuildLabel = () => {
   
     const verifyQrCode = (code: string) => {
       if(code !== "" && code !== null && code !== undefined) {
-        console.log("SALUT C COOL", code)
         setcompareOnlineReady(true);
         setHashRecorded(code);
       } else { setcompareOnlineReady(false) }
@@ -82,10 +81,8 @@ const BuildLabel = () => {
 
       const imageData = await imageResponse.json();
       const uploadedImageHash = imageData.IpfsHash;
-      console.log('📸 Image uploadée sur IPFS, hash:', uploadedImageHash)
       // Stocker le hash IPFS de l'image dans le state
       setImageIpfsHash(uploadedImageHash);
-      console.log('💾 Hash stocké dans le state imageIpfsHash');
       toast.success('Image uploadée !', {
         description: `IPFS: ${uploadedImageHash}`
       });
@@ -141,7 +138,6 @@ const BuildLabel = () => {
       });
 
     } catch (error) {
-      console.error('Erreur:', error);
       toast.error('Échec de la création', {
         description: error instanceof Error ? error.message : 'Une erreur est survenue'
       });
@@ -152,8 +148,6 @@ const BuildLabel = () => {
   // Gestion du succès/échec de la transaction blockchain
   useEffect(() => {
     if (isSuccess && imageIpfsHash) {
-      console.log('🎉 NFT créé avec succès! Image IPFS hash:', imageIpfsHash);
-
       toast.success('NFT créé avec succès !', {
         description: 'Redirection vers la page de vérification...'
       });
@@ -165,7 +159,6 @@ const BuildLabel = () => {
           productName: nameLabel,
           photoUrl: imageIpfsHash
         });
-        console.log('📤 Redirection avec photoUrl:', imageIpfsHash);
         router.push(`/nftcheck?${params.toString()}`);
       }, 2000);
     }

@@ -84,7 +84,6 @@ export async function fetchNftMetadata(
 ): Promise<NftMetadata | null> {
   try {
     const url = getIpfsUrl(metadataUri, gateway);
-    console.log('🔍 Récupération metadata depuis:', url);
 
     const response = await fetch(url);
 
@@ -93,11 +92,9 @@ export async function fetchNftMetadata(
     }
 
     const metadata: NftMetadata = await response.json();
-    console.log('📋 Metadata récupéré:', metadata);
 
     return metadata;
   } catch (error) {
-    console.error('❌ Erreur lors de la récupération du metadata:', error);
     return null;
   }
 }

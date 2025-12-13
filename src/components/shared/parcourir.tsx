@@ -37,7 +37,6 @@ const Parcourir = ({ recordHashQr, label = false, setFileFromParcourir }: Qrcode
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
         setFileHash(hashHex);
-        console.log('CA PASSE')
         recordHashQr(hashHex);
 
         // Envoyer le fichier au parent si la fonction est définie

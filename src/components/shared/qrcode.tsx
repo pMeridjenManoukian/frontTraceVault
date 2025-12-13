@@ -51,14 +51,13 @@ const Qrcode = ({ recordHashQr }: QrcodeProps) => {
                 setError('');
               }
               if (err && isMounted && err.name !== 'NotFoundException') {
-                console.error("Erreur du scanner :", err);
+                // Ignorer les erreurs de scanner
               }
             }
           );
         }
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Erreur inconnue";
-        console.error("Erreur d'initialisation :", errorMessage);
         setError(errorMessage);
         setIsScanning(false);
       }

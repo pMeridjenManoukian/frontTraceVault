@@ -35,8 +35,6 @@ const QRCodeDisplay = ({ hash }: { hash: string }) => {
                     dark: '#1f2937',
                     light: '#FFFFFF'
                 }
-            }, (error) => {
-                if (error) console.error('Erreur génération QR code:', error);
             });
         }
     }, [hash]);
@@ -50,12 +48,6 @@ const QRCodeDisplay = ({ hash }: { hash: string }) => {
 };
 
 const Nftcard = ({hashlocal, isNft, isEtiquette, productName, photoUrl, tokenId, isFromVerification, versionInfo}: NftcardProps) => {
-
-    // Debug logs
-    console.log('🎴 Nftcard - Props reçues:');
-    console.log('  - photoUrl:', photoUrl);
-    console.log('  - photoUrl transformée:', photoUrl ? getIpfsUrl(photoUrl) : 'undefined');
-    console.log('  - productName:', productName);
 
     // Carte d'échec - pas de NFT trouvé
     if (!isNft) {
@@ -137,7 +129,6 @@ const Nftcard = ({hashlocal, isNft, isEtiquette, productName, photoUrl, tokenId,
                             alt={productName || "Produit authentifié"}
                             className="auth-card__image"
                             onError={(e) => {
-                                console.error('Erreur chargement image IPFS:', photoUrl);
                                 e.currentTarget.src = couilles.src;
                             }}
                         />

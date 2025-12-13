@@ -25,7 +25,6 @@ const BuildDocument = () => {
 
     const verifyQrCode = (code: string) => {
       if(code !== "" && code !== null && code !== undefined) {
-        console.log("SALUT C COOL", code)
         setcompareOnlineReady(true);
         setHashRecorded(code);
       } else { setcompareOnlineReady(false) }
@@ -55,7 +54,6 @@ const BuildDocument = () => {
     }
 
     setIsCreatingNFT(true);
-    console.log('passe1')
     try {
       // Création directe sur la blockchain (pas d'upload IPFS pour les documents)
       toast.info('Transaction blockchain', {
@@ -65,11 +63,6 @@ const BuildDocument = () => {
       // Pour les documents, on ne stocke pas sur IPFS, donc on passe une valeur placeholder
       const placeholderIpfs = "QmNoPinata"; // Placeholder pour indiquer que le fichier n'est pas sur IPFS
 
-      console.log('📝 Paramètres de la transaction:');
-      console.log('  - Hash:', hashRecorded);
-      console.log('  - IPFS (placeholder):', placeholderIpfs);
-      console.log('  - Address:', ADRESS_CONTRACT);
-
       writeContract({
         address: ADRESS_CONTRACT as `0x${string}`,
         abi: CONTRACT_ABI,
@@ -78,10 +71,7 @@ const BuildDocument = () => {
         value: parseEther('0.0002')
       });
 
-      console.log('✅ writeContract appelé');
-
     } catch (error) {
-      console.error('Erreur:', error);
       toast.error('Échec de la création', {
         description: error instanceof Error ? error.message : 'Une erreur est survenue'
       });
@@ -92,8 +82,6 @@ const BuildDocument = () => {
   // Gestion du succès/échec de la transaction blockchain
   useEffect(() => {
     if (isSuccess) {
-      console.log('🎉 NFT Document créé avec succès!');
-
       toast.success('NFT Document créé avec succès !', {
         description: 'Redirection vers la page de vérification...'
       });
@@ -107,7 +95,6 @@ const BuildDocument = () => {
           totalVersions: '1',
           estDerniereVersion: 'true'
         });
-        console.log('📤 Redirection vers nftcheck');
         router.push(`/nftcheck?${params.toString()}`);
       }, 2000);
     }

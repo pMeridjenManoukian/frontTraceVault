@@ -31,7 +31,6 @@ export default function Verifier() {
 
   const verifyQrCode = (code: string) => {
     if(code !== "" && code !== null && code !== undefined) {
-      console.log("Hash détecté:", code)
       setcompareOnlineReady(true);
       setHashRecorded(code);
     } else { setcompareOnlineReady(false) }
@@ -43,7 +42,6 @@ export default function Verifier() {
   }
 
   const approuveHash = async () => {
-    console.log('🔍 Vérification du hash:', hashRecorded)
     setIsVerifying(true);
 
     try {
@@ -57,7 +55,6 @@ export default function Verifier() {
       }
 
       const info = result.data as any;
-      console.log('📦 Données récupérées:', info);
 
       // 🎯 Construire l'URL avec toutes les infos nécessaires
       const isLabel = Number(info.typeCertif) === 0;
@@ -68,7 +65,6 @@ export default function Verifier() {
         const metadata = await fetchNftMetadata(info.metadataURI);
         if (metadata) {
           ipfsImageHash = getImageFromMetadata(metadata);
-          console.log('🖼️ Hash image extrait:', ipfsImageHash);
         } else {
           toast.error('⚠️ Impossible de charger l\'image du NFT');
         }
@@ -102,7 +98,6 @@ export default function Verifier() {
       toast.success('✅ Hash vérifié avec succès !');
       router.push(`/nftcheck?${params.toString()}`);
     } catch (error) {
-      console.error('Erreur lors de la vérification:', error);
       toast.error('❌ Erreur lors de la vérification');
     } finally {
       setIsVerifying(false);

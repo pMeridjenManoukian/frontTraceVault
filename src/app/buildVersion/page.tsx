@@ -30,7 +30,6 @@ const BuildVersion = () => {
 
     const handleOldFileHash = (code: string) => {
       if(code !== "" && code !== null && code !== undefined) {
-        console.log("Hash de l'ancienne version:", code)
         setOldHash(code);
         // Si c'est un QR code, on n'a pas de fichier, donc on passe directement à l'étape suivante
         setStep('new');
@@ -40,7 +39,6 @@ const BuildVersion = () => {
     // Fonction spécifique pour le QR code de l'ancienne version
     const handleOldQrCode = (code: string) => {
       if(code !== "" && code !== null && code !== undefined) {
-        console.log("Hash de l'ancienne version (QR):", code)
         setOldHash(code);
         // Pas de fichier pour QR code, on simule juste pour l'affichage
         setStep('new');
@@ -52,7 +50,6 @@ const BuildVersion = () => {
 
     const handleNewFileHash = (code: string) => {
       if(code !== "" && code !== null && code !== undefined) {
-        console.log("Hash de la nouvelle version:", code)
         setNewHash(code);
         setCompareOnlineReady(true);
       }
@@ -105,11 +102,6 @@ const BuildVersion = () => {
         description: 'Ajout de la nouvelle version au classeur...'
       });
 
-      console.log('📝 Paramètres de la transaction:');
-      console.log('  - Hash précédent:', oldHash);
-      console.log('  - Nouveau hash:', newHash);
-      console.log('  - Address:', ADRESS_CONTRACT);
-
       writeContract({
         address: ADRESS_CONTRACT as `0x${string}`,
         abi: CONTRACT_ABI,
@@ -118,10 +110,7 @@ const BuildVersion = () => {
         value: parseEther('0.0002')
       });
 
-      console.log('✅ writeContract appelé');
-
     } catch (error) {
-      console.error('Erreur:', error);
       toast.error('Échec de la création', {
         description: error instanceof Error ? error.message : 'Une erreur est survenue'
       });
@@ -161,8 +150,6 @@ const BuildVersion = () => {
   // Gestion du succès/échec de la transaction blockchain
   useEffect(() => {
     if (isSuccess && newHash && !shouldFetchInfo) {
-      console.log('🎉 Nouvelle version créée avec succès!');
-
       toast.success('Nouvelle version ajoutée avec succès !', {
         description: 'Récupération des informations...'
       });
@@ -182,8 +169,6 @@ const BuildVersion = () => {
   // Gestion de la redirection après récupération des infos
   useEffect(() => {
     if (hashInfo && shouldFetchInfo) {
-      console.log('📊 Informations récupérées:', hashInfo);
-
       setTimeout(() => {
         const params = new URLSearchParams({
           message: newHash,
@@ -193,7 +178,6 @@ const BuildVersion = () => {
           totalVersions: hashInfo?.totalVersions?.toString() || '1',
           estDerniereVersion: 'true'
         });
-        console.log('📤 Redirection vers nftcheck avec version:', hashInfo?.versionActuelle, '/', hashInfo?.totalVersions);
         router.push(`/nftcheck?${params.toString()}`);
       }, 1000);
     }

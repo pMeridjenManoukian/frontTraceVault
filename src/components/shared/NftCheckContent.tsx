@@ -33,13 +33,6 @@ export default function NftCheckContent() {
   const isLabel = typeCertif === '0' || isLabelFromOldMethod;
   const isFromVerification = source === 'verification';
 
-  // Debug logs
-  console.log('📋 NftCheckContent - Paramètres reçus:');
-  console.log('  - photoUrlOldMethod:', photoUrlOldMethod);
-  console.log('  - metadataURI:', metadataURI);
-  console.log('  - isLabelFromOldMethod:', isLabelFromOldMethod);
-  console.log('  - productName:', productName);
-
   const [isEtiquette, setIsEtiquette] = useState(isLabel ? false : true);
   const [isNft, setIsNft] = useState(hash !== "nohash");
 
