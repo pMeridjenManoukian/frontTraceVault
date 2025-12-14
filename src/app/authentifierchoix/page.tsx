@@ -16,10 +16,9 @@ const authentifier = () => {
             <div className="choix-card-icon">
               <SquareStar size={80} />
             </div>
-            <h2 className="choix-card-title">Authentifier un objet</h2>
+            <h2 className="choix-card-title">Créer une étiquette de produit</h2>
             <p className="choix-card-description">
-              Authentifiez un objet en créant une étiquette NFT éternel dans la blockchain
-            </p>
+              A l'aide d'une photo de votre objet, créez un etiquette d'authenticité sur la blockchain</p>
             <div className="choix-card-action">
               Créer une un certificat d'authenticité NFT →
             </div>

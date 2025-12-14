@@ -175,7 +175,7 @@ const BuildLabel = () => {
   return (
     <div className={`verifier-container ${styles.page}`}>
       <div className="verifier-content">
-        <h1 className="verifier-title">Authentifier un objet</h1>
+        <h1 className="verifier-title">Créer une étiquette de produit</h1>
         <p className="verifier-subtitle">Choisissez une méthode de vérification</p>
 
         <div className="verifier-methods">
