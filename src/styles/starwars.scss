@@ -1,0 +1,232 @@
+// Star Wars Easter Egg Styles
+// IMPORTANT: Tous les sélecteurs sont encapsulés dans .starwars-overlay
+// pour ne pas affecter le reste de la page
+
+// ===== KEYFRAMES (doivent être hors de la classe) =====
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes intro {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes logo {
+  0% {
+    transform: translate(-50%, -50%) scale(2.75);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(2.75);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+}
+
+@keyframes scroll {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: -250%;
+  }
+}
+
+// ===== CONTENEUR PRINCIPAL =====
+
+.starwars-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  z-index: 9999;
+  overflow: hidden;
+  margin: 0;
+
+  // Bouton de fermeture
+  .starwars-close {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10001;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // Étoiles scintillantes
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+  }
+
+  // Texte d'intro "A long time ago..."
+  .intro {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    animation: intro 6s ease-out 1s;
+    color: rgb(75, 213, 238);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    opacity: 0;
+    text-align: center;
+    width: 90%;
+    max-width: 800px;
+  }
+
+  // Logo TraceVault stylisé
+  .logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    animation: logo 9s ease-out 9s;
+    opacity: 0;
+    width: 90%;
+    max-width: 600px;
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  // Styles des paragraphes (UNIQUEMENT dans Star Wars overlay)
+  p {
+    color: #FFFF82;
+    line-height: 1.6;
+  }
+
+  // Panneau avec perspective (texte défilant)
+  #starwars-board {
+    font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+    transform: perspective(400px) rotateX(35deg); // ✅ Augmenté de 25deg à 35deg pour plus de verticalité
+    transform-origin: 50% 100%;
+    text-align: justify;
+    position: absolute;
+    margin-left: -9em;
+    font-weight: bold;
+    overflow: hidden;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    height: 50em;
+    width: 18em;
+    bottom: 0;
+    left: 50%;
+    z-index: 10000;
+
+    // Gradient de fondu en haut
+    &:after {
+      position: absolute;
+      content: ' ';
+      bottom: 65%; // ✅ Augmenté de 60% à 65% pour zone de lecture plus grande
+      left: 0;
+      right: 0;
+      top: 0;
+      background: linear-gradient(to bottom, transparent 0%, black 100%);
+    }
+  }
+
+  // Contenu qui défile
+  #starwars-content {
+    animation: scroll 120s linear 18s;
+    position: absolute;
+    top: 100%;
+    padding: 0 1em;
+  }
+
+  // Titre "Episode I"
+  #starwars-title {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+  }
+
+  // Sous-titre "THE BLOCKCHAIN AWAKENS"
+  #starwars-subtitle {
+    text-align: center;
+    font-size: 1em;
+    margin-bottom: 1em;
+  }
+
+  // ===== RESPONSIVE =====
+
+  @media (max-width: 768px) {
+    #starwars-board {
+      font-size: clamp(1rem, 2.5vw, 1.8rem);
+      width: 16em;
+      margin-left: -8em;
+    }
+
+    .intro {
+      font-size: clamp(1.2rem, 4vw, 2rem);
+    }
+
+    .starwars-close {
+      width: 40px;
+      height: 40px;
+      top: 10px;
+      right: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #starwars-board {
+      font-size: clamp(0.8rem, 2vw, 1.5rem);
+      width: 14em;
+      margin-left: -7em;
+    }
+
+    .intro {
+      font-size: clamp(1rem, 3.5vw, 1.5rem);
+    }
+  }
+}

@@ -1,30 +1,38 @@
+'use client';
+
 import Image from "next/image";
 import styles from "./page.module.css";
 import logo from '@/assets/tracevaultlogo.png';
 import Link from 'next/link';
 import { ArrowRight, Shield, FileCheck, Lock } from 'lucide-react';
-import '@rainbow-me/rainbowkit/styles.css';
-
-import {
-  getDefaultConfig,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit';
-import { WagmiProvider } from 'wagmi';
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-} from 'wagmi/chains';
-import {
-  QueryClientProvider,
-  QueryClient,
-} from "@tanstack/react-query";
+import { useState, useCallback } from 'react';
+import StarWarsIntro from '@/components/StarWarsIntro';
+import { useSecretCode } from '@/hooks/useKonamiCode';
+import { toast } from 'sonner';
 
 export default function Home() {
+  const [showStarWars, setShowStarWars] = useState(false); // ❌ Désactivé par défaut - activé uniquement avec "moustache"
+
+  const handleSecretCode = useCallback(() => {
+    setShowStarWars(true);
+    toast.success('Easter Egg activé !', {
+      description: 'Que la Force soit avec vous...',
+      duration: 3000,
+    });
+  }, []);
+
+  // Détecter la séquence "moustache" pour réafficher
+  useSecretCode('moustache', handleSecretCode);
+
+  const handleCloseStarWars = () => {
+    setShowStarWars(false);
+  };
+
   return (
-    <div className={`home-container ${styles.page}`}>
+    <>
+      {showStarWars && <StarWarsIntro onClose={handleCloseStarWars} />}
+
+      <div className={`home-container ${styles.page}`}>
       <div className="home-content">
         <div className="home-hero">
           <div className="home-logo-wrapper">
@@ -75,5 +83,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </>
   );
 }

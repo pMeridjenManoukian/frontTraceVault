@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer-container">
       <div className="footer-content">
         <div className="footer-section">
-          <h3 className="footer-title">TraceVault</h3>
+          <h4 className="footer-title">TraceVault</h4>
           <p className="footer-description">
             Solution blockchain pour l'authentification et la vérification de documents
           </p>
@@ -24,9 +24,7 @@ const Footer = () => {
         <div className="footer-section">
           <h4 className="footer-heading">Ressources</h4>
           <ul className="footer-links">
-            <li><Link href="#">Documentation</Link></li>
-            <li><Link href="#">Guide d'utilisation</Link></li>
-            <li><Link href="#">FAQ</Link></li>
+            <li><Link href="/credits">Crédits</Link></li>
           </ul>
         </div>
 
