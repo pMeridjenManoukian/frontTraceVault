@@ -1,5 +1,5 @@
 import styles from "../page.module.css";
-import { User, Code, Users } from 'lucide-react';
+import { User, Code, Users, Lightbulb } from 'lucide-react';
 
 export default function Credits() {
   const team = [
@@ -31,6 +31,12 @@ export default function Credits() {
       name: "Gary Wajdenbaum",
       role: "Consultant",
       icon: <Users size={48} />,
+      color: "var(--secondary-color)"
+    },
+    {
+      name: "Agathe Meridjen-Manoukian",
+      role: "Tatalentueuse",
+      icon: <Lightbulb size={48} />,
       color: "var(--secondary-color)"
     }
   ];
